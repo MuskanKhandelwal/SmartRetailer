@@ -6,7 +6,7 @@
 
 Small retailers often rely on static markups and ad-hoc promos, missing revenue when demand shifts with seasonality, inflation, or competitor moves. This project prototypes **learned pricing agents** that experiment safely in a **market simulator** and choose prices that increase revenue while respecting **fairness caps**. We benchmark against **static** and **rule-based** baselines.
 
-This repo is tailored to **Dominick’s weekly store-level** scanner data. We build a clean soft-drinks panel from the classic files (upcsdr.csv, wsdr.csv, dominicks_weeks.csv), then will run baselines and agents. Agents try small price changes in a sandbox and keep those that help revenue without violating caps.
+This repo is tailored to **Dominick’s weekly store-level** scanner data. We build a clean soft-drinks panel from the classic files (upcsdr.csv, wsdr.csv, dominicks_weeks.csv), then will run baselines and agents. Agents try small price changes in a sandbox and keep those that help revenue without violating caps.The project builds a realistic market simulator seeded with Dominick’s Finer Foods scanner data and trains agents such as Double DQN and PPO to learn revenue-optimal pricing policies.
 
 
 ### Preprocessing 
@@ -131,6 +131,70 @@ Store your FRED API key in an environment variable or edit the script line:
 ```python
 FRED_API_KEY = "your_api_key_here"
 ```
+## 🕹 Pricing Simulator
+
+We design a multi-UPC pricing environment where agents:
+
+* adjust price each week
+
+* receive predicted demand from the LightGBM model
+
+* earn reward based on profit
+
+* respect price-change caps (±10%)
+
+### Key features:
+
+State includes features, current price, lagged demand, weather, etc.
+
+Actions = %-price change
+
+Noise added to simulate real markets
+
+Tracks profit, units sold, price path
+
+# 🧠 Agents Implemented
+
+## **1️⃣ Static (Historical) Agent**
+Replays original Dominick’s prices.
+
+## **2️⃣ Rule-Based Agent**
+Raises price when demand > avg  
+Lowers price when demand < avg
+
+## **3️⃣ Double DQN Agent**
+- Replay buffer  
+- Target network  
+- ε-greedy exploration  
+- Stable price-learning  
+- Achieved **positive profit across all UPCs**
+
+## **4️⃣ PPO Agent (Continuous Price Control)**
+- Actor–critic architecture  
+- Gaussian policy  
+- Clipped objective  
+- Supports smooth continuous pricing  
+
+PPO extends the system to **more realistic price adjustment scenarios**.
+
+---
+## 📈 Results (Summary)
+### ⭐ DQN Performance
+
+* Initial model: –$70,000 loss
+
+* After tuning (replay buffer, target network, epsilon decay):
+→ +$6,119 average profit per episode
+
+* Lower reward volatility
+
+* Learned stable adjustments across UPCs
+
+### ⭐ Baselines vs DQN
+
+* Static & rule-based agents: mostly negative profit
+
+* Double DQN: consistent positive profit across all products
 
 ---
 
@@ -148,6 +212,18 @@ pip install pandas requests meteostat pyarrow
 python preprocess_softdrinks.py     # generates softdrinks_cleaned.csv
 python add_timestamp.py             # merges calendar weeks
 python augment_panel.py             # adds CPI & weather features
+```
+### Repository Structure
+```markdown
+SmartRetailer/
+│── data/
+│── preprocess/
+│── simulator/
+│── rl/
+│   ├── dqn/
+│   ├── ppo/
+│── results/
+│── README.md
 ```
 
 ### 3️⃣ Output verification
