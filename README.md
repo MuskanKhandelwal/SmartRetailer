@@ -189,12 +189,22 @@ PPO extends the system to **more realistic price adjustment scenarios**.
 * Lower reward volatility
 
 * Learned stable adjustments across UPCs
+Here is a snapshot of the DQN versions performance:
 
-### ⭐ Baselines vs DQN
+<img src="Assets/dqn_comparison.png" width="750">
+
+### ⭐ Baselines vs DQN vs PPO
 
 * Static & rule-based agents: mostly negative profit
 
 * Double DQN: consistent positive profit across all products
+  
+* PPO: Star of the story, almost double the profit of DQN
+
+
+Here is a snapshot of the DQN performance:
+
+<img src="Assets/model_comparison_symlog.png" width="750">
 
 ## 📸 Dashboard Preview
 
