@@ -196,6 +196,14 @@ PPO extends the system to **more realistic price adjustment scenarios**.
 
 * Double DQN: consistent positive profit across all products
 
+## 📸 Dashboard Preview
+
+Here is a snapshot of the SmartRetailer Streamlit interface:
+
+<img src="Dashboard.png" width="750">
+
+> The PPO model recommends prices, the demand model predicts units, and the system displays uplift vs. historical performance.
+
 ---
 
 ## 💻 Setup & Usage
